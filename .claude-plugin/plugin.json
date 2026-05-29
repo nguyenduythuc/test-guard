@@ -1,8 +1,7 @@
 {
   "name": "test-guard",
   "description": "AI-assisted test-after framework: author Vitest tests alongside code, reproduce bugs test-first, discover untested files, run tests + coverage via MCP.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {"name": "ThucND"},
-  "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json"
 }
