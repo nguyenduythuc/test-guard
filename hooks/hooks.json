@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "TG_SHARED_DIR=\"${user_config.shared_dir}\" node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-missing-test.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-missing-test.mjs\"",
             "timeout": 10
           }
         ]

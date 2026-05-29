@@ -21,12 +21,12 @@ claude plugin marketplace add <github-user>/test-guard
 claude plugin install test-guard@test-guard
 ```
 
-After install, configure for your repo:
+After install, set env vars for your repo (add to `~/.zshrc` or `~/.bashrc`):
 ```bash
-claude plugin config test-guard workspace_name "@myorg/shared"
-claude plugin config test-guard shared_dir "packages/shared"
-claude plugin config test-guard scan_dirs "utils,redux,hooks"   # optional, default: utils,redux
-claude plugin config test-guard test_runner "vitest run"        # optional default
+export TG_WORKSPACE="@myorg/shared"      # yarn workspace package name (required)
+export TG_SHARED_DIR="packages/shared"   # path from project root to tested package (required)
+export TG_SCAN_DIRS="utils,redux"        # dirs to scan for untested files (default: utils,redux)
+export TG_TEST_RUNNER="vitest run"       # test runner cmd inside workspace (default: vitest run)
 ```
 
 ### Local development
