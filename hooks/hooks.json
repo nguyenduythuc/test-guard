@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -d \"${CLAUDE_PLUGIN_ROOT}/node_modules/@modelcontextprotocol/sdk\" || npm install --prefix \"${CLAUDE_PLUGIN_ROOT}\" --silent >/dev/null 2>&1 || true",
+            "timeout": 120,
+            "statusMessage": "test-guard: ensuring MCP deps"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "TG_SHARED_DIR=\"${user_config.shared_dir}\" node \"${CLAUDE_PLUGIN_ROOT}/hooks/check-missing-test.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

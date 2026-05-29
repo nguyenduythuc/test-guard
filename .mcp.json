@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "test-guard": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/server.mjs"],
+      "cwd": "${CLAUDE_PROJECT_DIR}",
+      "env": {
+        "CLAUDE_PROJECT_DIR": "${CLAUDE_PROJECT_DIR}",
+        "TG_WORKSPACE":   "${user_config.workspace_name}",
+        "TG_SHARED_DIR":  "${user_config.shared_dir}",
+        "TG_SCAN_DIRS":   "${user_config.scan_dirs}",
+        "TG_TEST_RUNNER": "${user_config.test_runner}"
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "test-guard",
+  "description": "AI-assisted test-after framework: author Vitest tests alongside code, reproduce bugs test-first, discover untested files, run tests + coverage via MCP.",
+  "version": "0.2.0",
+  "author": {"name": "ThucND"},
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json",
+  "userConfig": {
+    "workspace_name": {
+      "type": "string",
+      "title": "Yarn workspace name",
+      "description": "Package name passed to `yarn workspace <name> vitest`. E.g. @myorg/shared",
+      "required": true
+    },
+    "shared_dir": {
+      "type": "string",
+      "title": "Shared package path",
+      "description": "Path from project root to the tested package. E.g. packages/shared",
+      "required": true
+    },
+    "scan_dirs": {
+      "type": "string",
+      "title": "Dirs to scan for coverage gaps",
+      "description": "Comma-separated subdirs of shared_dir to scan for untested files. E.g. utils,redux,hooks",
+      "required": false
+    },
+    "test_runner": {
+      "type": "string",
+      "title": "Test runner command",
+      "description": "Command used to run tests inside the workspace. Default: vitest run",
+      "required": false
+    }
+  }
+}

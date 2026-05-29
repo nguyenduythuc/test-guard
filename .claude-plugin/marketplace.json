@@ -1,0 +1,7 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "test-guard",
+  "description": "AI-assisted test-after framework for JS/TS monorepos.",
+  "owner": {"name": "ThucND"},
+  "plugins": [{"name": "test-guard", "source": "./", "category": "development"}]
+}
