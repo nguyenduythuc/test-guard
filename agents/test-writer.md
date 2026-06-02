@@ -31,9 +31,43 @@ A single file path, a glob, or a list. If given none, ask which files (or use th
 5. **Iterate** until both are green. If a test reveals a real bug, keep the test asserting actual behavior and note it — do NOT silently change source (that's the user's call).
 
 ## Constraints
-- Pure logic only (utils, redux, validation, formatting, calc). Skip components/hooks needing a DOM/renderer — flag them as out of scope.
+- Covers utils, redux slices, AND React hooks. For hooks, add `// @vitest-environment jsdom` at top and use `renderHook` + `act` from `@testing-library/react`.
+- Skip RN components requiring a full native renderer — flag as out of scope.
 - Never weaken an assertion just to go green. A test that catches a bug is the goal.
 - Don't modify source files except when explicitly asked to fix a discovered bug.
+
+## Critical rules (learned from production failures)
+
+### ❌ NEVER use require() in test body
+```ts
+// WRONG — Cannot find module error at runtime
+const {useSomeMutation} = require('../redux/slices/apiSlices');
+```
+Always top-level import after vi.mock:
+```ts
+vi.mock('../redux/slices/apiSlices', () => ({ useSomeMutation: vi.fn() }));
+import {useSomeMutation} from '../redux/slices/apiSlices';
+const mockMutation = useSomeMutation as ReturnType<typeof vi.fn>;
+```
+
+### Screen names = kebab-case
+Check `types/paramtypes.ts`. `ScreenParamEnum.Home` = `'home'`, not `'Home'`.
+
+### Hook imports from index
+When hook does `import {useConfigRouting} from '.'`, mock `'.'` not `'./routing'`:
+```ts
+vi.mock('.', () => ({ useConfigRouting: vi.fn(() => ({appNavigate: vi.fn()})) }));
+import {useConfigRouting} from '.';
+```
+
+### Fake timers + async
+`vi.runAllTimers()` → timeout on async hooks. Use:
+```ts
+await act(async () => { await vi.advanceTimersByTimeAsync(ms); });
+```
+
+### vi.clearAllMocks() limitation
+Resets call counts but NOT implementations. Reset singleton mocks explicitly in `beforeEach`.
 
 ## Report back
 - Files processed, test files created, total tests added.
