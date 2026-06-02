@@ -38,6 +38,17 @@ A single file path, a glob, or a list. If given none, ask which files (or use th
 
 ## Critical rules (learned from production failures)
 
+### RTK Query mutation mock requires `.unwrap()`
+Check source hook for `await mutate().unwrap()`. If present, mock trigger fn MUST return `{unwrap: vi.fn().mockResolvedValue(...)}`.
+```ts
+// ✅
+useLoginMutation: vi.fn(() => [
+  vi.fn().mockReturnValue({ unwrap: vi.fn().mockResolvedValue({token: 'abc'}) }),
+  {isLoading: false, error: undefined},
+])
+```
+Missing `unwrap` → hook catches silently → stderr noise → test passes but doesn't test success path.
+
 ### ❌ NEVER use require() in test body
 ```ts
 // WRONG — Cannot find module error at runtime

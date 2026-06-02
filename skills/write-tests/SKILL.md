@@ -104,6 +104,26 @@ it('fires callback after delay', async () => {
 });
 ```
 
+### RTK Query mutation mock — phải có `.unwrap()`
+Hooks dùng pattern `await mutation().unwrap()`. Mock thiếu `unwrap` → hook throw + catch silently → test pass nhưng không test happy path thực sự. Dấu hiệu: `stderr` có `TypeError: Cannot read properties of undefined (reading 'unwrap')` dù tests xanh.
+
+```ts
+// ❌ Hook sẽ throw khi gọi .unwrap() — error bị catch, test pass giả
+useSomeMutation: vi.fn(() => [vi.fn(), {isLoading: false}])
+
+// ✅ Đúng shape — mock fn trả object có .unwrap()
+useSomeMutation: vi.fn(() => [
+  vi.fn().mockReturnValue({
+    unwrap: vi.fn().mockResolvedValue({code: 'SUCCESS', data: {}}),
+  }),
+  {isLoading: false, error: undefined},
+])
+```
+
+**Rule**: khi hook source có `await mutate(...).unwrap()`, mock trigger fn (index 0) PHẢI trả `{unwrap: vi.fn().mockResolvedValue(...)}`. Luôn check source hook trước khi viết mock.
+
+---
+
 ### ❌ ANTI-PATTERN: require() inside test body
 **Never** use `require()` inside `it()` or `describe()` to get mocked module references.
 Node can't `require()` a Vitest-intercepted module → `Cannot find module` error.
